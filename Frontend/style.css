@@ -49,6 +49,18 @@ body {
     z-index: -2;
 }
 
+.noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.03;
+    z-index: -1;
+    pointer-events: none;
+}
+
 .blob,
 .blob-2 {
     position: fixed;
@@ -190,6 +202,12 @@ button.secondary {
     cursor: default;
 }
 
+.modal-content.glass-card:hover {
+    transform: none;
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.2);
+    border-color: var(--accent-primary);
+}
+
 @keyframes modalIn {
     from {
         opacity: 0;
@@ -237,6 +255,14 @@ input:focus {
     background: #fff;
 }
 
+.otp-input {
+    width: 60px;
+    height: 70px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
 /* View Sections */
 .view-section {
     display: none;
@@ -259,30 +285,16 @@ input:focus {
     }
 }
 
-/* Lobby View Specifics */
-#lobby-view h1 {
-    font-size: 6rem;
-    line-height: 1;
-}
-
-.counter-token {
-    font-size: 5rem;
-    font-weight: 800;
-    color: var(--accent-primary);
-    margin: 1rem 0;
-    animation: flash 1.5s infinite;
-}
-
-@keyframes flash {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
+/* Profile Badge */
+.profile-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Toasts */
@@ -321,6 +333,26 @@ input:focus {
     }
 }
 
+/* Status Indicators */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-low {
+    background: var(--success);
+}
+
+.status-medium {
+    background: var(--warning);
+}
+
+.status-high {
+    background: var(--danger);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     h1 {
@@ -329,9 +361,5 @@ input:focus {
 
     .glass-card {
         padding: 1.5rem;
-    }
-
-    #lobby-view h1 {
-        font-size: 3rem;
     }
 }
