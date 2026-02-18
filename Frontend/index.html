@@ -4,31 +4,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QueueFlow Pro | Control Panel</title>
+    <title>QueueFlow Pro | Institutional Queue Management</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
     <div class="mesh-bg"></div>
+    <div class="noise"></div>
     <div class="blob"></div>
     <div class="blob-2"></div>
     <div id="toast-container"></div>
 
-    <div class="container" style="margin-top: 2rem;">
+    <!-- Top Auth Bar -->
+    <div class="top-bar">
+        <div class="container"
+            style="padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--accent-primary);">QueueFlow</span><span
+                    style="font-weight: 400; font-size: 1.25rem;">Pro</span>
+            </div>
+            <div id="auth-controls" style="display: flex; gap: 1.5rem; align-items: center;">
+                <select id="sector-selector"
+                    style="background: rgba(0,0,0,0.05); border: 1px solid var(--glass-border); padding: 0.4rem 0.8rem; border-radius: 10px; font-weight: 700; color: var(--text-primary); cursor: pointer;">
+                    <option value="hospital">🏥 Hospital Mode</option>
+                    <option value="banking">💰 Banking Mode</option>
+                    <option value="government">🏛️ Govt Office Mode</option>
+                    <option value="supermarket">🛒 Supermarket</option>
+                    <option value="restaurant">🍕 Restaurant</option>
+                    <option value="salon">✂️ Salon & Spa</option>
+                    <option value="telecom">📱 Telecom Center</option>
+                    <option value="general">💼 General Office</option>
+                </select>
+                <a href="#" class="auth-link" onclick="openAuthModal('login')">Login</a>
+                <a href="#" class="auth-link" onclick="openAuthModal('signup')">Sign Up</a>
+                <a href="#" class="auth-link guest" onclick="setGuestMode()">Guest Mode</a>
+                <div id="user-profile-badge" style="display: none; align-items: center; gap: 0.75rem; cursor: pointer;"
+                    onclick="switchView('profile')">
+                    <span id="user-display-name" style="font-weight: 600;">John Doe</span>
+                    <div class="profile-avatar"><i data-lucide="user"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 5rem;">
         <nav id="main-nav">
-            <a href="#" class="nav-link" onclick="window.location.href='../Member1_Home/index.html'">Home</a>
-            <a href="#" class="nav-link" onclick="window.location.href='../Member2_Portal/index.html'">Token Portal</a>
-            <a href="#" class="nav-link active" data-view="admin">Control Panel</a>
+            <a href="#" class="nav-link active" data-view="home">Home</a>
+            <a href="#" class="nav-link" data-view="customer">Token Portal</a>
+            <a href="#" class="nav-link" data-view="admin">Control Panel</a>
             <a href="#" class="nav-link" data-view="lobby">Public Display</a>
         </nav>
 
+        <!-- Home View -->
+        <section id="home-view" class="view-section view-active">
+            <div class="hero-section">
+                <h1>Streamline Your Wait with <span style="color: var(--accent-primary);">QueueFlow Pro</span></h1>
+                <p class="hero-description">Experience the next generation of institutional queue management. No more
+                    standing in long lines. Book your token digitally, track live status, and get notified when it's
+                    your turn.</p>
+                <div class="hero-cta">
+                    <button class="accent" onclick="switchView('customer')">Book a Token Now</button>
+                    <button class="secondary" onclick="scrollToFeatures()">How it Works</button>
+                </div>
+            </div>
+
+            <div id="features" class="feature-grid" style="margin-top: 5rem;">
+                <div class="glass-card feature-card">
+                    <div class="profile-avatar" style="margin-bottom: 1.5rem;"><i data-lucide="smartphone"></i></div>
+                    <h3>Digital Tokens</h3>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Join a queue from anywhere using your
+                        smartphone. Receive a digital token with a unique QR code.</p>
+                </div>
+                <div class="glass-card feature-card">
+                    <div class="profile-avatar" style="margin-bottom: 1.5rem;"><i data-lucide="timer"></i></div>
+                    <h3>Live Tracking</h3>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Monitor your position in the queue in
+                        real-time. Get accurate estimated wait times for every department.</p>
+                </div>
+                <div class="glass-card feature-card">
+                    <div class="profile-avatar" style="margin-bottom: 1.5rem;"><i data-lucide="bell"></i></div>
+                    <h3>Smart Notifications</h3>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Receive instant updates and
+                        professional audio announcements when your token is called to a counter.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer View -->
+        <section id="customer-view" class="view-section">
+            <header
+                style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 id="portal-name">Service Hub</h1>
+                    <p style="color: var(--text-secondary);">Select the appropriate queue to receive professional
+                        assistance.</p>
+                </div>
+                <div class="glass-card"
+                    style="padding: 0.75rem 1.25rem; border-radius: 14px; display: flex; gap: 1rem; align-items: center; font-size: 0.85rem; font-weight: 600;">
+                    <span style="color: var(--text-secondary); margin-right: 0.5rem;">CROWD STATUS:</span>
+                    <span style="display: flex; align-items: center; gap: 0.4rem;"><span
+                            class="status-indicator status-low" style="width: 10px; height: 10px;"></span> Less</span>
+                    <span style="display: flex; align-items: center; gap: 0.4rem;"><span
+                            class="status-indicator status-medium" style="width: 10px; height: 10px;"></span>
+                        Medium</span>
+                    <span style="display: flex; align-items: center; gap: 0.4rem;"><span
+                            class="status-indicator status-high" style="width: 10px; height: 10px;"></span> High</span>
+                </div>
+            </header>
+
+            <div id="department-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <!-- Departments injected here -->
+            </div>
+
+            <div id="active-token-container" style="margin-top: 3rem; display: none;">
+                <div class="glass-card" id="token-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
+                        <div>
+                            <h2 id="token-dept-name">General Inquiry</h2>
+                            <div id="token-number"
+                                style="font-size: 5rem; font-weight: 800; margin: 0.5rem 0; color: var(--accent-primary);">
+                                #G-001</div>
+                            <p style="color: var(--text-secondary); font-size: 1.1rem;">Counter Assigned: <span
+                                    id="assigned-counter"
+                                    style="color: var(--text-primary); font-weight: 700;">Waiting...</span></p>
+                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Your position: <span
+                                    id="queue-position" style="color: var(--text-primary); font-weight: 700;">---</span>
+                            </p>
+                        </div>
+                        <div id="qrcode"
+                            style="padding: 15px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+                        <div>
+                            <p
+                                style="color: var(--text-secondary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">
+                                Est. Wait Time</p>
+                            <p id="wait-time"
+                                style="font-size: 1.75rem; font-weight: 800; color: var(--accent-primary);">~ 12 mins
+                            </p>
+                        </div>
+                        <div>
+                            <p
+                                style="color: var(--text-secondary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">
+                                Smart Status</p>
+                            <p id="prediction-msg"
+                                style="font-size: 1rem; font-weight: 600; color: var(--success); margin-top: 0.5rem;">
+                                Moving Steady</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="secondary" onclick="rescheduleToken()">Reschedule</button>
+                        <button style="background: var(--danger); color: white;" onclick="cancelToken()">Cancel
+                            Interaction</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile View -->
+        <section id="profile-view" class="view-section">
+            <header style="margin-bottom: 2rem;">
+                <h1>User Profile</h1>
+                <p style="color: var(--text-secondary);">Manage your account and view booking history.</p>
+            </header>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                <div class="glass-card">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div class="profile-avatar"
+                            style="width: 100px; height: 100px; font-size: 2.5rem; margin: 0 auto 1.5rem;"><i
+                                data-lucide="user"></i></div>
+                        <h2 id="profile-name">John Doe</h2>
+                        <p id="profile-email" style="color: var(--text-secondary);">john@example.com</p>
+                    </div>
+                    <button class="secondary"
+                        style="width: 100%; border: 1px solid var(--danger); color: var(--danger);"
+                        onclick="logout()">Log Out</button>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Booking History</h3>
+                    <div id="booking-history"
+                        style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- History items injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Admin View -->
-        <section id="admin-view" class="view-section view-active">
+        <section id="admin-view" class="view-section">
             <header
                 style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <h1>Institutional Control</h1>
@@ -95,26 +272,147 @@
         </section>
     </div>
 
-    <!-- Auth Modal (Simplified for Staff Login) -->
+    <!-- Modals -->
     <div id="modal-overlay" class="modal-overlay" onclick="closeAllModals()">
+        <!-- Auth Modal -->
         <div id="auth-modal" class="glass-card modal-content" onclick="event.stopPropagation()">
             <div id="login-form" class="auth-form">
-                <h2>Staff Login</h2>
-                <p style="margin-bottom: 2rem; color: var(--text-secondary);">Access Queue Control.</p>
+                <h2>Welcome Back</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">Enter your credentials to access your
+                    account.</p>
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="login-email" placeholder="staff@example.com">
+                    <input type="email" id="login-email" placeholder="name@example.com">
+                    <span id="login-email-error" class="form-error">Invalid email or password</span>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" id="login-pass" placeholder="••••••••">
+                    <span id="login-pass-error" class="form-error">This field is required</span>
+                </div>
+                <div style="margin-bottom: 1.5rem; text-align: right;">
+                    <a href="#" class="small-link" onclick="toggleAuthForm('forgot')">Forgot Password?</a>
                 </div>
                 <button class="accent" style="width: 100%;" onclick="handleLogin()">Sign In</button>
+                <p style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+                    Don't have an account? <a href="#" onclick="toggleAuthForm('signup')">Sign Up</a>
+                </p>
+            </div>
+
+            <div id="signup-form" class="auth-form" style="display: none;">
+                <h2>Create Account</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">Start managing your visits professionally.
+                </p>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" placeholder="John Doe">
+                    <span id="reg-name-error" class="form-error">Name is required</span>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="reg-email" placeholder="name@example.com">
+                    <span id="reg-email-error" class="form-error">Please enter a valid email</span>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-pass" placeholder="••••••••">
+                    <span id="reg-pass-error" class="form-error">Minimum 6 characters required</span>
+                </div>
+                <button class="accent" style="width: 100%;" onclick="handleSignup()">Create Account</button>
+                <p style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+                    Already have an account? <a href="#" onclick="toggleAuthForm('login')">Login</a>
+                </p>
+            </div>
+
+            <div id="forgot-form" class="auth-form" style="display: none;">
+                <h2>Reset Password</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">We'll send you instructions to reset your
+                    password.</p>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="reset-email" placeholder="name@example.com">
+                </div>
+                <button class="accent" style="width: 100%;" onclick="handleForgot()">Send Instructions</button>
+                <p style="margin-top: 2rem; text-align: center; font-size: 0.9rem;">
+                    Back to <a href="#" onclick="toggleAuthForm('login')">Login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Booking & OTP Modal -->
+        <div id="booking-modal" class="glass-card modal-content" onclick="event.stopPropagation()">
+            <div id="booking-form" class="auth-form">
+                <h2 id="modal-dept-title">Join Queue</h2>
+                <p style="margin: 1rem 0 2rem; color: var(--text-secondary);">Please provide details for identity
+                    verification.</p>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="book-name" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="book-phone" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin: 2rem 0;">
+                    <label
+                        style="font-weight: 800; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Select
+                        Category</label>
+                    <button class="secondary" onclick="setBookingType('regular')" id="btn-regular"
+                        style="text-align: left; border: 1px solid var(--glass-border);">Regular Access</button>
+                    <button class="secondary" onclick="setBookingType('emergency')" id="btn-emergency"
+                        style="text-align: left; border: 1px solid var(--glass-border); border-left: 5px solid var(--priority);">
+                        <strong>Emergency Case</strong>
+                        <div style="font-size: 0.75rem; opacity: 0.7;">Requires immediate attention</div>
+                    </button>
+                    <button class="secondary" onclick="setBookingType('disabled')" id="btn-disabled"
+                        style="text-align: left; border: 1px solid var(--glass-border); border-left: 5px solid var(--accent-secondary);">
+                        <strong>Priority Access</strong>
+                        <div style="font-size: 0.75rem; opacity: 0.7;">Disabled / Pregnant / Elderly</div>
+                    </button>
+                </div>
+
+                <button class="accent" style="width: 100%;" onclick="initiateOTP()">Verify & Book Token</button>
+            </div>
+
+            <div id="otp-form" class="auth-form" style="display: none; text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(37, 99, 235, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--accent-primary);">
+                    <i data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h2>Verify Identity</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">We've sent a 4-digit code to your phone.
+                </p>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2.5rem;">
+                    <input type="text" maxlength="1" id="otp1" class="otp-input">
+                    <input type="text" maxlength="1" id="otp2" class="otp-input">
+                    <input type="text" maxlength="1" id="otp3" class="otp-input">
+                    <input type="text" maxlength="1" id="otp4" class="otp-input">
+                </div>
+
+                <button class="accent" style="width: 100%;" onclick="confirmOTP()">Confirm Verification</button>
+                <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    Didn't receive it? <a href="#" onclick="initiateOTP()">Resend Code</a>
+                </p>
             </div>
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal-overlay" class="modal-overlay" style="display: none; z-index: 10000;" onclick="closeConfirmModal()">
+        <div class="glass-card modal-content confirm-dialog" onclick="event.stopPropagation()">
+            <h2 id="confirm-title">Are you sure?</h2>
+            <p id="confirm-msg">This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button id="confirm-btn" class="accent">Proceed</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="api.js"></script>
     <script src="main.js"></script>
 </body>
 
