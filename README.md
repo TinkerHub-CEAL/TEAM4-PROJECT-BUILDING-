@@ -1,4 +1,3 @@
-
 # Digital Queue Token & Waiting-Time Management System 🎫
 
 An efficient, real-time web application designed to modernize physical and virtual queuing experiences by providing live token tracking and accurate waiting-time estimations.
@@ -22,25 +21,23 @@ This project was a collaborative effort guided by our mentor to build scalable, 
     * Nandana Rajesh
 
 ## 🚀 Key Features
-* **Real-time Token Generation:** Assigns unique digital tokens to users instantly.
+* **Real-time Token Generation:** Assigns unique digital tokens to users instantly via JavaScript.
 * **Live Queue Status:** Displays the current token being served and the user’s position in line.
-* **Waiting-Time Estimation:** Calculates approximate wait times based on current processing speed.
-* **Responsive Interface:** A seamless experience across mobile and desktop devices.
-* **Admin Dashboard:** A dedicated control panel for staff to call the next token or reset the queue.
+* **Waiting-Time Estimation:** Calculates approximate wait times based on processing speed.
+* **Responsive Interface:** Pure CSS design that works on mobile, tablets, and desktops.
+* **Admin Dashboard:** A dedicated interface for staff to call the next token or reset the queue.
 
 ## 🛠️ Tech Stack
-* **Frontend:** React.js, HTML5, CSS3
-* **Logic:** JavaScript (ES6+)
-* **Environment:** Node.js, Git, VS Code
+* **Frontend:** HTML5, CSS3
+* **Logic:** Vanilla JavaScript (ES6+)
+* **Deployment:** GitHub Pages (Recommended)
 
 ## 📂 Folder Structure
 ```text
 TEAM4-PROJECT-BUILDING/
-├── public/              # Static assets and index.html
-├── src/
-│   ├── components/      # Reusable React components (Token, Display, Admin)
-│   ├── styles/          # CSS modules and global layout
-│   ├── App.js           # Main application logic and routing
-│   └── index.js         # Entry point
-├── package.json         # Project dependencies and scripts
+├── assets/              # Images, icons, and media
+├── css/                 # Stylesheets (style.css)
+├── js/                  # JavaScript logic (script.js)
+├── index.html           # Main User Portal
+├── admin.html           # Staff/Admin Dashboard
 └── README.md            # Project documentation
